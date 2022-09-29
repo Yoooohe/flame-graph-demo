@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { FixedSizeList as List } from 'react-window'
 import { convertData } from './utils'
 
@@ -27,12 +27,22 @@ const ListItem = memo(props => {
 })
 
 export default function FlameChart({ data, height, width }) {
-  const ListData = convertData(data)
+  const ListData = useMemo(() => {
+    return convertData(data)
+  }, [data])
+
+  const itemData = useMemo(() => {
+    return {
+      ListData,
+      width,
+    }
+  }, [ListData, width])
+
   return (
     <List
       height={height}
       itemCount={ListData.length}
-      itemData={{ ListData, width }}
+      itemData={itemData}
       itemSize={30}
       width={width}
     >
