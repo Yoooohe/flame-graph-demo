@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import FlameChart from './FlameChart'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import './App.css'
 
 function App() {
+  const [data, setData] = useState(null)
+  const loadData = () => {
+    fetch('/data.json')
+      .then(response => response.json())
+      .then(data => {
+        setData(data)
+      })
+  }
+  if (data === null) return <button onClick={loadData}>Load Data</button>
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AutoSizer>
+        {({ height, width }) => (
+          <FlameChart data={data} height={height} width={width} />
+        )}
+      </AutoSizer>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
